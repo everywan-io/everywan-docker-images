@@ -11,17 +11,20 @@ RUN apt-get update
 RUN apt-get install -y git
 
 # Add credentials on build
-ARG SSH_PRIVATE_KEY
-RUN mkdir /root/.ssh/
-RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
-RUN chmod 600 /root/.ssh/id_rsa
+# ARG SSH_PRIVATE_KEY
+# RUN mkdir /root/.ssh/
+# RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
+# RUN chmod 600 /root/.ssh/id_rsa
 
 # Make sure bitbucket and github domains are accepted
-RUN touch /root/.ssh/known_hosts
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+# RUN touch /root/.ssh/known_hosts
+# RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+# Download public key for github.com
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # Clone the repositories
-RUN git clone git@github.com:everywan-io/EveryGUI.git --branch bugfixes
+RUN --mount=type=ssh git clone git@github.com:everywan-io/EveryGUI.git --branch bugfixes
 
 # Build the final image
 #FROM python:3.8-slim-bullseye

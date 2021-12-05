@@ -11,24 +11,30 @@ RUN apt-get update
 RUN apt-get install -y git
 
 # Add credentials on build
-ARG SSH_PRIVATE_KEY
-RUN mkdir /root/.ssh/
-RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
-RUN chmod 600 /root/.ssh/id_rsa
+# ARG SSH_PRIVATE_KEY
+# RUN mkdir /root/.ssh/
+# RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
+# RUN chmod 600 /root/.ssh/id_rsa
 
 # Make sure bitbucket and github domains are accepted
-RUN touch /root/.ssh/known_hosts
-RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+# RUN touch /root/.ssh/known_hosts
+# RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
+# RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+# Download public key for github.com
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+# Download public key for bitbucket.org
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 # Clone the repositories
-RUN git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
-RUN git clone git@github.com:everywan-io/srv6-sdn-proto.git
-RUN git clone git@github.com:everywan-io/srv6-sdn-openssl.git
-RUN git clone git@github.com:everywan-io/srv6-sdn-controller-state.git --branch experimental-dockerize-controller
-RUN git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch bugfixes
-RUN git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch feature/align-to-mgmt-plane
-RUN git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-openssl.git
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-controller-state.git --branch experimental-dockerize-controller
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch bugfixes
+RUN --mount=type=ssh git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch feature/align-to-mgmt-plane
+RUN --mount=type=ssh git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
