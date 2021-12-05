@@ -73,6 +73,6 @@ jobs:
           context: ./EveryGUI
           push: true
           build-args: |
-              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+               SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
