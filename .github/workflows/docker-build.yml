@@ -50,9 +50,10 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
-          #labels: ${{ steps.meta.outputs.labels }}
-          labels: everyboss
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: everyboss:latest
+          labels: ${{ steps.meta.outputs.labels }}
+          #labels: everyboss
 
       - name: Build and push Docker image (EveryEdge)
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -63,9 +64,10 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
-          #labels: ${{ steps.meta.outputs.labels }}
-          labels: everyedge
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: everyedge:latest
+          labels: ${{ steps.meta.outputs.labels }}
+          #labels: everyedge
 
       - name: Build and push Docker image (EveryEdgeOS)
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -76,9 +78,10 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
-          #labels: ${{ steps.meta.outputs.labels }}
-          labels: everyedgeos
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: everyedgeos:latest
+          labels: ${{ steps.meta.outputs.labels }}
+          #labels: everyedgeos
 
       - name: Build and push Docker image (EveryGUI)
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -89,6 +92,7 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
-          #labels: ${{ steps.meta.outputs.labels }}
-          labels: everygui
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: everygui:latest
+          labels: ${{ steps.meta.outputs.labels }}
+          #labels: everygui
