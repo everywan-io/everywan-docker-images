@@ -1,0 +1,13 @@
+{
+    "id":"",
+    "features":[
+       {
+          "name":"gRPC",
+          "port":12345
+       },
+       {
+          "name":"SSH",
+          "port":22
+       }
+    ]
+ }

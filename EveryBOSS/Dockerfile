@@ -1,0 +1,76 @@
+# syntax=docker/dockerfile:1
+
+# Multi-stage build
+
+# First we build an intermediate image, build 
+# dependencies and ssh keys will not persist in the final image
+FROM ubuntu as intermediate
+
+# Install tools required for project
+RUN apt-get update
+RUN apt-get install -y git
+
+# Add credentials on build
+ARG SSH_PRIVATE_KEY
+RUN mkdir /root/.ssh/
+RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+
+# Make sure bitbucket and github domains are accepted
+RUN touch /root/.ssh/known_hosts
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+# Clone the repositories
+RUN git clone git@github.com:everywan-io/EveryBOSS.git --branch nb-interface-controller-integration
+RUN git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
+RUN git clone git@github.com:everywan-io/srv6-sdn-proto.git
+#RUN git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
+
+# Build the final image
+#FROM python:3.8-slim-bullseye
+FROM ubuntu
+
+MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
+
+# Copy the repository form the intermediate image
+COPY --from=intermediate /EveryBOSS /code/EveryBOSS
+COPY --from=intermediate /srv6-sdn-control-plane /code/srv6-sdn-control-plane
+COPY --from=intermediate /srv6-sdn-proto /code/srv6-sdn-proto
+#COPY --from=intermediate /srv6-properties-generators /code/srv6-properties-generators
+
+# Install dependencies
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update
+RUN apt-get install -y python3.6 pipenv graphviz graphviz-dev
+RUN pip3 install protobuf==3.19.1
+
+# Setup control plane
+WORKDIR /code/srv6-sdn-control-plane
+RUN python3 setup.py install
+
+# Setup and build protos
+WORKDIR /code/srv6-sdn-proto
+RUN python3 setup.py install
+
+# Setup properties generators
+#WORKDIR /code/srv6-properties-generators
+#RUN python3 setup.py install
+
+# Setup EveryBOSS
+WORKDIR /code/EveryBOSS
+RUN pipenv --python python3.6 install --system --deploy --ignore-pipfile
+WORKDIR /code/EveryBOSS
+
+CMD ["bash", "run_dev_env.sh"]
+#, "--config-file", "gRPC"]
+
+#ENV FLASK_APP=app.py
+#ENV FLASK_RUN_HOST=0.0.0.0
+#RUN apk add --no-cache gcc musl-dev linux-headers
+#COPY requirements.txt requirements.txt
+#RUN pip install -r requirements.txt
+#EXPOSE 5000
+#COPY . .
+#CMD ["flask", "run"]
