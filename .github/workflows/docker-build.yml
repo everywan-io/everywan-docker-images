@@ -24,6 +24,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -42,8 +46,10 @@ jobs:
         with:
           context: ./EveryBOSS
           push: true
-          build-args: |
-              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          #build-args: |
+          #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          ssh: |
+            default=${{ env.SSH_AUTH_SOCK }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -52,8 +58,10 @@ jobs:
         with:
           context: ./EveryEdge
           push: true
-          build-args: |
-              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          #build-args: |
+          #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          ssh: |
+            default=${{ env.SSH_AUTH_SOCK }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -62,8 +70,10 @@ jobs:
         with:
           context: ./EveryEdgeOS
           push: true
-          build-args: |
-              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          #build-args: |
+          #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          ssh: |
+            default=${{ env.SSH_AUTH_SOCK }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -72,7 +82,9 @@ jobs:
         with:
           context: ./EveryGUI
           push: true
-          build-args: |
-              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          #build-args: |
+          #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          ssh: |
+            default=${{ env.SSH_AUTH_SOCK }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
