@@ -20,10 +20,13 @@ RUN apt-get install -y git
 #RUN touch /root/.ssh/known_hosts
 #RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
+# Download public key for github.com
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+
 # Clone the repositories
-RUN git clone git@github.com:everywan-io/EveryBOSS.git --branch nb-interface-controller-integration
-RUN git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
-RUN git clone git@github.com:everywan-io/srv6-sdn-proto.git
+RUN git clone --mount=type=ssh git@github.com:everywan-io/EveryBOSS.git --branch nb-interface-controller-integration
+RUN git clone --mount=type=ssh git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
+RUN git clone --mount=type=ssh git@github.com:everywan-io/srv6-sdn-proto.git
 #RUN git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
 
 # Build the final image
