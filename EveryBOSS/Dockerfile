@@ -11,14 +11,14 @@ RUN apt-get update
 RUN apt-get install -y git
 
 # Add credentials on build
-ARG SSH_PRIVATE_KEY
-RUN mkdir /root/.ssh/
-RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
-RUN chmod 600 /root/.ssh/id_rsa
+#ARG SSH_PRIVATE_KEY
+#RUN mkdir /root/.ssh/
+#RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
+#RUN chmod 600 /root/.ssh/id_rsa
 
 # Make sure bitbucket and github domains are accepted
-RUN touch /root/.ssh/known_hosts
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+#RUN touch /root/.ssh/known_hosts
+#RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Clone the repositories
 RUN git clone git@github.com:everywan-io/EveryBOSS.git --branch nb-interface-controller-integration
