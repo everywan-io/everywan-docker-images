@@ -53,8 +53,8 @@ RUN npm install -g @angular/cli
 # Start EveryGUI
 WORKDIR /code/EveryGUI
 RUN npm install
-#CMD ["ng", "serve", "-c", "local"]
-CMD ["ng", "build"]
+RUN ng build
+CMD ["ng", "serve", "-c", "local"]
 
 #ENV FLASK_APP=app.py
 #ENV FLASK_RUN_HOST=0.0.0.0
