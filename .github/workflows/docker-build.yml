@@ -37,15 +37,12 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - uses: webfactory/ssh-agent@v0.5.4
-        with:
-            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Build and push Docker image (EveryBOSS)
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: ./EveryBOSS
           push: true
+          env: ${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -54,6 +51,7 @@ jobs:
         with:
           context: ./EveryEdge
           push: true
+          env: ${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -62,6 +60,7 @@ jobs:
         with:
           context: ./EveryEdgeOS
           push: true
+          env: ${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -70,5 +69,6 @@ jobs:
         with:
           context: ./EveryGUI
           push: true
+          env: ${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
