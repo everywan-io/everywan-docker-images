@@ -42,7 +42,8 @@ jobs:
         with:
           context: ./EveryBOSS
           push: true
-          build-args: SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          build-args: |
+              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -51,7 +52,8 @@ jobs:
         with:
           context: ./EveryEdge
           push: true
-          build-args: SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          build-args: |
+              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -60,7 +62,8 @@ jobs:
         with:
           context: ./EveryEdgeOS
           push: true
-          build-args: SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          build-args: |
+              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -69,6 +72,7 @@ jobs:
         with:
           context: ./EveryGUI
           push: true
-          build-args: SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          build-args: |
+              SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
