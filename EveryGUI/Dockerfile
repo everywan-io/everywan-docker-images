@@ -53,7 +53,8 @@ RUN npm install -g @angular/cli
 # Start EveryGUI
 WORKDIR /code/EveryGUI
 RUN npm install
-RUN ng build everywan-everygui
+RUN ng build
+#everywan-everygui
 #CMD ["ng", "serve", "-c", "local"]
 
 # Use official nginx image as the base image
