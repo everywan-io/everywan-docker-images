@@ -23,6 +23,9 @@ RUN apt-get install -y git
 # Download public key for github.com
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+# Download public key for bitbucket.org
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
+
 # Clone the repositories
 RUN --mount=type=ssh git clone git@github.com:everywan-io/EveryBOSS.git --branch nb-interface-controller-integration
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
