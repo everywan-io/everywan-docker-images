@@ -28,7 +28,7 @@ RUN --mount=type=ssh git clone git@github.com:everywan-io/EveryGUI.git --branch 
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
-FROM ubuntu
+FROM ubuntu as build
 
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
@@ -53,8 +53,7 @@ RUN npm install -g @angular/cli
 # Start EveryGUI
 WORKDIR /code/EveryGUI
 RUN npm install
-RUN ng build
-#everywan-everygui
+RUN ng build everywan-everygui
 #CMD ["ng", "serve", "-c", "local"]
 
 # Use official nginx image as the base image
