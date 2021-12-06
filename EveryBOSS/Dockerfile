@@ -30,7 +30,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 RUN --mount=type=ssh git clone git@github.com:everywan-io/EveryBOSS.git --branch nb-interface-controller-integration
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git
-RUN git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch feature/align-to-mgmt-plane
+RUN --mount=type=ssh git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch feature/align-to-mgmt-plane
 RUN --mount=type=ssh git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
 
 # Build the final image
