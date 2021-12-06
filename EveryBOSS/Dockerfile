@@ -30,6 +30,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 RUN --mount=type=ssh git clone git@github.com:everywan-io/EveryBOSS.git --branch nb-interface-controller-integration
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git
+RUN git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch feature/align-to-mgmt-plane
 RUN --mount=type=ssh git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
 
 # Build the final image
@@ -42,6 +43,7 @@ MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 COPY --from=intermediate /EveryBOSS /code/EveryBOSS
 COPY --from=intermediate /srv6-sdn-control-plane /code/srv6-sdn-control-plane
 COPY --from=intermediate /srv6-sdn-proto /code/srv6-sdn-proto
+COPY --from=intermediate /srv6pm-delay-measurement /code/srv6pm-delay-measurement
 COPY --from=intermediate /srv6-properties-generators /code/srv6-properties-generators
 
 # Install dependencies
@@ -58,6 +60,10 @@ RUN python3 setup.py install
 
 # Setup and build protos
 WORKDIR /code/srv6-sdn-proto
+RUN python3 setup.py install
+
+# Setup STAMP utils
+WORKDIR /code/srv6pm-delay-measurement
 RUN python3 setup.py install
 
 # Setup properties generators
