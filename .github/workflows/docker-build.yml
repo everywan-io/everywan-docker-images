@@ -35,12 +35,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          #images: ${{ env.REGISTRY }}/cscarpitta/everyboss, ${{ env.REGISTRY }}/cscarpitta/everyedge, ${{ env.REGISTRY }}/cscarpitta/everyedgeos, ${{ env.REGISTRY }}/cscarpitta/everygui
+      #- name: Extract metadata (tags, labels) for Docker
+      #  id: meta
+      #  uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #  with:
+      #    images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      #    #images: ${{ env.REGISTRY }}/cscarpitta/everyboss, ${{ env.REGISTRY }}/cscarpitta/everyedge, ${{ env.REGISTRY }}/cscarpitta/everyedgeos, ${{ env.REGISTRY }}/cscarpitta/everygui
 
       - name: Build and push Docker image (EveryBOSS)
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -51,7 +51,8 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/cscarpitta/everyboss
           labels: ${{ steps.meta.outputs.labels }}
           #labels: everyboss
           outputs: type=registry,dest=everyboss
@@ -65,7 +66,8 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/cscarpitta/everyedge
           labels: ${{ steps.meta.outputs.labels }}
           #labels: everyedge
 
@@ -78,7 +80,8 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/cscarpitta/everyedgeos
           labels: ${{ steps.meta.outputs.labels }}
           #labels: everyedgeos
 
@@ -91,6 +94,7 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          tags: ${{ steps.meta.outputs.tags }}
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/cscarpitta/everygui
           labels: ${{ steps.meta.outputs.labels }}
           #labels: everygui
