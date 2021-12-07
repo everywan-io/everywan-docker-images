@@ -78,8 +78,8 @@ RUN jq -n ${CONFIG} > /tmp/config-everyedge.json
 
 VOLUME /usr/share/everyedge
 
-# Setup iptables
-RUN apt-get install -y iptables
+# Setup iptables and libpcap
+RUN apt-get install -y iptables libpcap-dev
 RUN update-alternatives --set ip6tables /usr/sbin/ip6tables-nft
 
 # Run the EveryEdge device
