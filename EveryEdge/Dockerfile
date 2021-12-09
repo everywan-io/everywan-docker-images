@@ -101,7 +101,7 @@ COPY config.ini /configs/config.ini
 COPY device-info.json /configs/device-info.json
 #CMD ["python", "-m", "srv6_sdn_control_plane.srv6_controller"]
 #CMD ["python3", "-m", "srv6_sdn_data_plane.ew_edge_device", "--device-config-file", "/tmp/config-everyedge.json", "--nat-discovery-server-ip", "0.0.0.0", "--nat-discovery-client-ip", "0.0.0.0", "--pymerang-server-ip", "0.0.0.0", "--pymerang-server-port", "50061", "--token-file", "/usr/share/everyedge/token"]
-CMD ["python3", "-m", "srv6_sdn_data_plane.ew_edge_device", "-c", "/configs/config.ini"]
+CMD ["python3", "-m", "srv6_sdn_data_plane.ew_edge_device", "-c", "/etc/everyedge/config.ini"]
 #"-c", "sample_config.ini"]
 
 #ENV FLASK_APP=app.py

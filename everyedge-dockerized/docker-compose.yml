@@ -31,8 +31,8 @@ services:
      cap_add:
        - NET_ADMIN
      volumes:
-       - ./token:/usr/share/everyedge/token
-       - ./config.ini:/usr/share/everyedge/config.ini
+       - ./token:/etc/everyedge/token
+       - ./config.ini:/etc/everyedge/config.ini
 
 
 
