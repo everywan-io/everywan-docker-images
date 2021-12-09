@@ -28,6 +28,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 # Clone the repositories
+RUN --mount=type=ssh git clone git@github.com:cscarpitta/pynat.git
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-openssl.git
@@ -43,6 +44,7 @@ FROM ubuntu
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
 # Copy the repository form the intermediate image
+COPY --from=intermediate /pynat /code/pynat
 COPY --from=intermediate /srv6-sdn-control-plane /code/srv6-sdn-control-plane
 COPY --from=intermediate /srv6-sdn-proto /code/srv6-sdn-proto
 COPY --from=intermediate /srv6-sdn-openssl /code/srv6-sdn-openssl
@@ -55,6 +57,10 @@ COPY --from=intermediate /srv6-properties-generators /code/srv6-properties-gener
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y graphviz graphviz-dev python3 python3-pip
 RUN pip3 install protobuf==3.19.1
+
+# Setup pynat
+WORKDIR /code/pynat
+RUN python3 setup.py install
 
 # Setup control plane
 WORKDIR /code/srv6-sdn-control-plane

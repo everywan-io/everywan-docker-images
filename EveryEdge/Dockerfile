@@ -28,6 +28,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 # Clone the repositories
+RUN --mount=type=ssh git clone git@github.com:cscarpitta/pynat.git
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-data-plane.git --branch experimental/dockerize-everyedge
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch experimental/dockerize-everyedge
@@ -40,6 +41,7 @@ FROM ubuntu
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
 # Copy the repository form the intermediate image
+COPY --from=intermediate /pynat /code/pynat
 COPY --from=intermediate /srv6-sdn-data-plane /code/srv6-sdn-data-plane
 COPY --from=intermediate /srv6-sdn-proto /code/srv6-sdn-proto
 COPY --from=intermediate /srv6-sdn-authentication /code/srv6-sdn-authentication
@@ -49,6 +51,10 @@ COPY --from=intermediate /srv6pm-delay-measurement /code/srv6pm-delay-measuremen
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq
 RUN pip3 install protobuf==3.19.1
+
+# Setup pynat
+WORKDIR /code/pynat
+RUN python3 setup.py install
 
 # Setup data plane
 WORKDIR /code/srv6-sdn-data-plane
