@@ -6,8 +6,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
-        run: docker-compose build
+        run: cd mgmt-dockerized && docker-compose build
       - name: Build the stack
-        run: docker-compose up -d
+        run: cd everyedge-dockerized && docker-compose build
+      - name: Build the stack
+        run: cd mgmt-dockerized && docker-compose up -d
+      - name: Build the stack
+        run: cd everyedge-dockerized && docker-compose up -d
       #- name: Test
       #  run: docker run --network container:webapp-frontend appropriate/curl -s --retry 10 --retry-connrefused http://localhost:5000/
