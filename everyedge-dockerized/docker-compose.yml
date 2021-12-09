@@ -6,6 +6,8 @@ services:
   host-1:
      container_name: everywan-host1
      image: ghcr.io/cscarpitta/everywan-host:latest
+     cap_add:
+       - NET_ADMIN
      networks:
        - everywan-host1-net
 
@@ -13,6 +15,8 @@ services:
   host-2:
      container_name: everywan-host2
      image: ghcr.io/cscarpitta/everywan-host:latest
+     cap_add:
+       - NET_ADMIN
      networks:
        - everywan-host2-net
 
@@ -20,6 +24,8 @@ services:
   host-3:
      container_name: everywan-host3
      image: ghcr.io/cscarpitta/everywan-host:latest
+     cap_add:
+       - NET_ADMIN
      networks:
        - everywan-host3-net
 
