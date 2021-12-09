@@ -42,6 +42,21 @@ jobs:
       #    images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       #    #images: ${{ env.REGISTRY }}/cscarpitta/everyboss, ${{ env.REGISTRY }}/cscarpitta/everyedge, ${{ env.REGISTRY }}/cscarpitta/everyedgeos, ${{ env.REGISTRY }}/cscarpitta/everygui
 
+      - name: Build and push Docker image (EveryWANHost)
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./EveryWANHost
+          push: true
+          #build-args: |
+          #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
+          ssh: |
+            default=${{ env.SSH_AUTH_SOCK }}
+          #tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/cscarpitta/everywan-host
+          labels: ${{ steps.meta.outputs.labels }}
+          #labels: everyboss
+          outputs: type=registry,dest=everywan-host
+
       - name: Build and push Docker image (EveryBOSS)
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
