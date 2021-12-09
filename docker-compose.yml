@@ -1,22 +1,20 @@
 ---
-version: "3.9"
+version: "3.5"
 
 services:
-  nginx:
-    #image: nginx:latest
-    build:
-      context: ./nginx/
-    container_name: nginx
-    # depends_on:
-    #   - flask
-    #volumes:
-    #  - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - nbi-net
-    ports:
-      - 80:80
-    profiles:
-      - mgmt-plane
+  #nginx:
+  #  #image: nginx:latest
+  #  build:
+  #    context: ./nginx/
+  #  container_name: nginx
+  #  # depends_on:
+  #  #   - flask
+  #  #volumes:
+  #  #  - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  #  networks:
+  #    - nbi-net
+  #  ports:
+  #    - 80:80
 
   keystone:
     container_name: keystone
@@ -27,7 +25,7 @@ services:
         KEYSTONE_DB_HOST: ${KEYSTONE_DB_HOST:-"database"}
         KEYSTONE_ADMIN_PASSWORD: ${KEYSTONE_ADMIN_PASSWORD}
         HTTP: ${HTTP:-http}
-    depends_on: 
+    depends_on:
       - database
     networks:
       - keystone-net
@@ -45,8 +43,6 @@ services:
     ports:
       - "5000:5000"
       - "35357:35357"
-    profiles:
-      - mgmt-plane
 
   database:
     container_name: keystone-database
@@ -60,8 +56,6 @@ services:
       MYSQL_USER: ${KEYSTONE_DB_USER:-keystone}
       MYSQL_PASSWORD: ${KEYSTONE_DB_PASSWORD}
       MYSQL_DATABASE: ${KEYSTONE_DB_NAME:-keystone}
-    profiles:
-      - mgmt-plane
 
 
   mongodb:
@@ -73,71 +67,9 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    ports: 
-      - "27017:27017"
-    # networks:
-    #   - mgmt-net
-    profiles:
-      - mgmt-plane
-      - ctrl-plane
-      
-  everyedgeos:
-    build:
-      context: ./EveryEdgeOS/
-    container_name: everyedgeos
-    # networks:
-    #   - mgmt-net
-    #   - host
-    # ports: 
-    #   - "50061:50061"
-    # expose: 
-    #   - "54321"
-    network_mode: "host"
-    profiles:
-      - ctrl-plane
-      
-  everyboss:
-    build:
-      context: ./EveryBOSS/
-    container_name: everyboss
-    # networks:
-    #   - mgmt-net
-    #   - host
-    network_mode: "host"
-    profiles:
-      - mgmt-plane
-      
-  everygui:
-    build:
-      context: ./EveryGUI/
-    container_name: everygui
-    # networks:
-    #   - mgmt-net
-    #   - host
-    network_mode: "host"
-    profiles:
-      - mgmt-plane
     ports:
-      - "4200:4200"
-      
-  everyedge:
-    build:
-      context: ./EveryEdge/
-    container_name: everyedge
-    # networks:
-    #   - mgmt-net
-    #   - host
-    network_mode: "host"
-    profiles:
-      - data-plane
-    volumes:
-      - /usr/share/everyedge/token:/usr/share/everyedge/token:ro
+      - "27017:27017"
 
 networks:
   keystone-net:
   nbi-net:
-  # mgmt-net:
-
-# volumes:
-#   everyedge-volume:
-#     external: false
