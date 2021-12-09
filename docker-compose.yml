@@ -62,7 +62,7 @@ services:
     container_name: mongodb
     image: mongo:3.6
     environment:
-      - MONGO_INITDB_DATABASE=4{MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
