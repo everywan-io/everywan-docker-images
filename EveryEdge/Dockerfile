@@ -55,6 +55,7 @@ RUN pip3 install protobuf==3.19.1
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
 # behaviors has not been accepted yet
 # We fix this issue by using our patched version of pyroute2
+RUN apt-get install -y git
 RUN pip3 install git+https://github.com/cscarpitta/pyroute2.git
 
 # Setup pynat
