@@ -52,6 +52,11 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq
 RUN pip3 install protobuf==3.19.1
 
+# Workaround: The patch which introduces the support for End.DT4 and End.DT46
+# behaviors has not been accepted yet
+# We fix this issue by using our patched version of pyroute2
+RUN pip3 install git+https://github.com/cscarpitta/pyroute2.git
+
 # Setup pynat
 RUN pip3 install six
 WORKDIR /code/pynat
