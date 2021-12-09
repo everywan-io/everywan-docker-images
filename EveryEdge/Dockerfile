@@ -53,6 +53,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq
 RUN pip3 install protobuf==3.19.1
 
 # Setup pynat
+pip3 install six
 WORKDIR /code/pynat
 RUN python3 setup.py install
 
