@@ -5,7 +5,11 @@ sed -i "s/KEYSTONE_DB_PASSWORD/${KEYSTONE_DB_PASSWORD}/g" /etc/keystone/keystone
 sed -i "s/KEYSTONE_DB_HOST/${KEYSTONE_DB_HOST}/g" /etc/keystone/keystone.conf
 
 
-su -s /bin/sh -c 'keystone-manage db_sync' keystone
+echo "* initializing database schema"
+while ! su -s /bin/sh -c 'keystone-manage db_sync' keystone; do
+  echo "! database schema initialization failed; retrying in 5 seconds..."
+  sleep 5
+done
 
 keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 
