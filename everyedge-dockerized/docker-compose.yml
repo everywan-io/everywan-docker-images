@@ -1,0 +1,54 @@
+---
+version: "3.5"
+
+services:
+
+  host-1:
+     container_name: everywan-host1
+     image: ghcr.io/cscarpitta/everywan-host:latest
+     networks:
+       - everywan-host1-net
+
+
+  host-2:
+     container_name: everywan-host2
+     image: ghcr.io/cscarpitta/everywan-host:latest
+     networks:
+       - everywan-host2-net
+
+
+  host-3:
+     container_name: everywan-host3
+     image: ghcr.io/cscarpitta/everywan-host:latest
+     networks:
+       - everywan-host3-net
+
+
+  everyedge:
+     container_name: everyedge
+     image: ghcr.io/cscarpitta/everyedge:latest
+     network_mode: host
+     cap_add:
+       - NET_ADMIN
+     volumes:
+       - ./token:/usr/share/everyedge/token
+       - ./config.ini:/usr/share/everyedge/config.ini
+
+
+
+networks:
+  everywan-host1-net:
+    name: everywan-host1-net
+    driver: bridge
+    driver_opts:
+          com.docker.network.bridge.name: br-host1
+  everywan-host2-net:
+    name: everywan-host2-net
+    driver: bridge
+    driver_opts:
+          com.docker.network.bridge.name: br-host2
+  everywan-host3-net:
+    name: everywan-host3-net
+    driver: bridge
+    driver_opts:
+          com.docker.network.bridge.name: br-host3
