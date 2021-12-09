@@ -70,6 +70,27 @@ services:
     ports:
       - "27017:27017"
 
+
+  everyboss:
+    container_name: everyboss
+    image: ghcr.io/cscarpitta/everyboss:latest
+    network_mode: "host"
+
+
+  everyedgeos:
+    container_name: everyedgeos
+    image: ghcr.io/cscarpitta/everyedgeos:latest
+    network_mode: "host"
+    cap_add:
+       - NET_ADMIN
+
+
+  everygui:
+    container_name: everygui
+    image: ghcr.io/cscarpitta/everygui:latest
+    network_mode: "host"
+
+
 networks:
   keystone-net:
   nbi-net:
