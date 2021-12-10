@@ -56,7 +56,20 @@ RUN pip3 install protobuf==3.19.1
 # behaviors has not been accepted yet
 # We fix this issue by using our patched version of pyroute2
 RUN apt-get install -y git
-RUN pip3 install git+https://github.com/cscarpitta/pyroute2.git
+RUN pip3 install twine
+RUN git clone https://github.com/cscarpitta/pyroute2.git --branch srv6_end_dt4 /tmp/pyroute2
+WORKDIR /tmp/pyroute2
+RUN make dist
+RUN pip3 install dist/pyroute2.core-*
+RUN pip3 install dist/pyroute2.ethtool-*
+RUN pip3 install dist/pyroute2.ipdb-*
+RUN pip3 install dist/pyroute2.ipset-*
+RUN pip3 install dist/pyroute2.minimal-*
+RUN pip3 install dist/pyroute2.ndb-*
+RUN pip3 install dist/pyroute2.nftables-*
+RUN pip3 install dist/pyroute2.nslink-*
+RUN pip3 install dist/pyroute2.protocols-*
+RUN pip3 install dist/pyroute2-*
 
 # Setup pynat
 RUN pip3 install six
