@@ -59,7 +59,7 @@ RUN apt-get install -y git
 RUN pip3 install twine
 RUN git clone https://github.com/cscarpitta/pyroute2.git --branch srv6_end_dt4 /tmp/pyroute2
 WORKDIR /tmp/pyroute2
-RUN make dist
+RUN make dist python=python3
 RUN pip3 install dist/pyroute2.core-*
 RUN pip3 install dist/pyroute2.ethtool-*
 RUN pip3 install dist/pyroute2.ipdb-*
