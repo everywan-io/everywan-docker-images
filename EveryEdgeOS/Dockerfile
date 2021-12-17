@@ -30,7 +30,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 # Clone the repositories
 RUN --mount=type=ssh git clone git@github.com:cscarpitta/pynat.git
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch experimental/dockerize-controller
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-openssl.git
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-controller-state.git --branch experimental-dockerize-controller
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch experimental/dockerize-everyedge
