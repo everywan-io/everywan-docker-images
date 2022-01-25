@@ -53,7 +53,7 @@ RUN npm install -g @angular/cli
 # Start EveryGUI
 WORKDIR /code/EveryGUI
 RUN npm install
-RUN ng build everywan-backoffice
+RUN ng build everywan-backoffice -c docker
 #CMD ["ng", "serve", "-c", "local"]
 
 # Use official nginx image as the base image
