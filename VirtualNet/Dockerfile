@@ -72,7 +72,7 @@ RUN pip3 install dist/pyroute2.protocols-*
 RUN pip3 install dist/pyroute2-*
 
 # Install Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # Add GPG key for frr
 RUN curl -s https://deb.frrouting.org/frr/keys.asc | apt-key add -
