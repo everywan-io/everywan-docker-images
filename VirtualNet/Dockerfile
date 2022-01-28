@@ -142,6 +142,10 @@ RUN update-alternatives --install /usr/bin/ospfd ospfd /lib/frr/ospfd 1
 RUN update-alternatives --install /usr/bin/ospf6d ospf6d /lib/frr/ospf6d 1
 RUN update-alternatives --install /usr/bin/staticd staticd /lib/frr/staticd 1
 
+# Workaround to set the correct MongoDB Host in the SD-WAN controller starter script
+WORKDIR /code/srv6-sdn-mininet/scripts
+RUN sed -i 's/python -m srv6_sdn_control_plane.srv6_controller/MONGODB_HOST=mongodb python -m srv6_sdn_control_plane.srv6_controller/g' sdwan_controller.sh 
+
 # Start the EveryEdge
 WORKDIR /code/srv6-sdn-mininet
 ENTRYPOINT ["python3", "./srv6_mininet_extension.py", "--topo", "topo/topology_h_multisub_ipv6.json"]
