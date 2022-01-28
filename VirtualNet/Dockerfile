@@ -50,7 +50,7 @@ COPY --from=intermediate /srv6-applications /code/srv6-applications
 
 # Install dependencies
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev graphviz graphviz-dev screen coturn iptables libpcap-dev curl mininet xterm
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev graphviz graphviz-dev screen coturn iptables libpcap-dev curl mininet xterm iproute2 iputils-ping
 RUN pip3 install protobuf==3.19.1
 
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
