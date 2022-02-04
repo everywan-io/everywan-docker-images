@@ -14,7 +14,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  #IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: cscarpitta/everyedge
 
 jobs:
   build-and-push-image:
@@ -72,7 +73,7 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ env.REGISTRY }}/cscarpitta/everyedge
+          tags: ${{ steps.meta.outputs.tags }}
+          #tags: ${{ env.REGISTRY }}/cscarpitta/everyedge
           labels: ${{ steps.meta.outputs.labels }}
           #labels: everyedge
