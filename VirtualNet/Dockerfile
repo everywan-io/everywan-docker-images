@@ -4,6 +4,14 @@
 # dependencies and ssh keys will not persist in the final image
 FROM ubuntu as intermediate
 
+# Software versions
+ENV EVERYWAN_PROTO_VERSION=v0.1.0
+ENV EVERYWAN_CONTROL_PLANE_VERSION=v0.1.1
+ENV EVERYWAN_STAMP_LIBRARY_VERSION=v0.1.1
+ENV EVERYWAN_CONTROLLER_STATE_VERSION=v0.1.0
+ENV EVERYWAN_DATA_PLANE_VERSION=v0.1.0
+ENV EVERYWAN_AUTHENTICATION_LIBRARY_VERSION=v0.1.0
+
 # Install tools required for project
 RUN apt-get update
 RUN apt-get install -y git
@@ -16,13 +24,13 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 # Clone the repositories
 RUN --mount=type=ssh git clone git@github.com:cscarpitta/pynat.git
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-data-plane.git --branch experimental/dockerize-everyedge
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch experimental/dockerize-controller
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch experimental/dockerize-everyedge
-RUN --mount=type=ssh git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch feature/align-to-mgmt-plane
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experimental/dockerize-controller
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-data-plane.git --branch $EVERYWAN_DATA_PLANE_VERSION
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch $EVERYWAN_PROTO_VERSION
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch $EVERYWAN_AUTHENTICATION_LIBRARY_VERSION
+RUN --mount=type=ssh git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch $EVERYWAN_STAMP_LIBRARY_VERSION
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch $EVERYWAN_CONTROL_PLANE_VERSION
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-openssl.git
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-controller-state.git --branch experimental-dockerize-controller
+RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-controller-state.git --branch $EVERYWAN_CONTROLLER_STATE_VERSION
 RUN --mount=type=ssh git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
 RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-mininet.git --branch add-ipv4-addrs-to-mgmt-net
 RUN --mount=type=ssh git clone git@bitbucket.org:ssalsano/dreamer-topology-parser-and-validator.git --branch carmine
