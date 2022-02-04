@@ -9,7 +9,7 @@ on:
   push:
     branches: ['master']
     paths:
-      - './EveryBOSS/VERSION'
+      - 'EveryBOSS/VERSION'
   workflow_dispatch:
 
 env:
