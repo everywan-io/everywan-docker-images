@@ -50,7 +50,7 @@ COPY --from=intermediate /srv6-applications /code/srv6-applications
 
 # Install dependencies
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev graphviz graphviz-dev screen coturn iptables libpcap-dev curl mininet xterm
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev graphviz graphviz-dev screen coturn iptables libpcap-dev curl mininet xterm iproute2 iputils-ping
 RUN pip3 install protobuf==3.19.1
 
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
@@ -141,6 +141,10 @@ RUN update-alternatives --install /usr/bin/zebra zebra /lib/frr/zebra 1
 RUN update-alternatives --install /usr/bin/ospfd ospfd /lib/frr/ospfd 1
 RUN update-alternatives --install /usr/bin/ospf6d ospf6d /lib/frr/ospf6d 1
 RUN update-alternatives --install /usr/bin/staticd staticd /lib/frr/staticd 1
+
+# Workaround to set the correct MongoDB Host in the SD-WAN controller starter script
+WORKDIR /code/srv6-sdn-mininet/scripts
+RUN sed -i 's/python -m srv6_sdn_control_plane.srv6_controller/MONGODB_HOST=mongodb python -m srv6_sdn_control_plane.srv6_controller/g' sdwan_controller.sh 
 
 # Start the EveryEdge
 WORKDIR /code/srv6-sdn-mininet
