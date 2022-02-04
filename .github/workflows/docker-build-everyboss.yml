@@ -8,6 +8,8 @@ name: Create and publish a Docker image (EveryBOSS)
 on:
   push:
     branches: ['master']
+    paths:
+      - './EveryBOSS/VERSION'
   workflow_dispatch:
 
 env:
@@ -57,6 +59,9 @@ jobs:
           #images: ${{ env.REGISTRY }}/cscarpitta/everyboss, ${{ env.REGISTRY }}/cscarpitta/everyedge, ${{ env.REGISTRY }}/cscarpitta/everyedgeos, ${{ env.REGISTRY }}/cscarpitta/everygui
           tags: |
               type=semver,pattern={{version}},value=${{ steps.read_file.outputs.contents }}
+              type=semver,pattern={{major}}.{{minor}},value=${{ steps.read_file.outputs.contents }}
+              type=semver,pattern={{major}},value=${{ steps.read_file.outputs.contents }}
+              type=sha
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -67,8 +72,8 @@ jobs:
           #    SSH_PRIVATE_KEY=${{ secrets.SSH_PRIVATE_KEY }}
           ssh: |
             default=${{ env.SSH_AUTH_SOCK }}
-          #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ env.REGISTRY }}/cscarpitta/everyboss
+          tags: ${{ steps.meta.outputs.tags }}
+          #tags: ${{ env.REGISTRY }}/cscarpitta/everyboss
           labels: ${{ steps.meta.outputs.labels }}
           #labels: everyboss
           outputs: type=registry,dest=everyboss
