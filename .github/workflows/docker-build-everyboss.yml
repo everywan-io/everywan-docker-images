@@ -55,7 +55,6 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           #images: ${{ env.REGISTRY }}/cscarpitta/everyboss, ${{ env.REGISTRY }}/cscarpitta/everyedge, ${{ env.REGISTRY }}/cscarpitta/everyedgeos, ${{ env.REGISTRY }}/cscarpitta/everygui
           tags: |
-              # use custom value instead of git tag
               type=semver,pattern={{version}},value=${{ steps.read_file.outputs.contents }}
 
       - name: Build and push Docker image
