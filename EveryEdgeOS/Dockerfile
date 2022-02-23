@@ -7,7 +7,7 @@
 FROM ubuntu as intermediate
 
 # Software versions
-ENV EVERYEDGEOS_VERSION=v0.2.1
+ENV EVERYEDGEOS_VERSION=v0.2.2
 
 # Install tools required for project
 RUN apt-get update
