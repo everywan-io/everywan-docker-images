@@ -7,12 +7,7 @@
 FROM ubuntu as intermediate
 
 # Software versions
-ENV EVERYWAN_PROTO_VERSION=v0.1.0
-ENV EVERYWAN_CONTROL_PLANE_VERSION=v0.1.1
-ENV EVERYWAN_STAMP_LIBRARY_VERSION=v0.1.2
-ENV EVERYWAN_CONTROLLER_STATE_VERSION=v0.1.0
-ENV EVERYWAN_DATA_PLANE_VERSION=v0.1.0
-ENV EVERYWAN_AUTHENTICATION_LIBRARY_VERSION=v0.1.0
+ENV EVERYEDGEOS_VERSION=v0.2.0
 
 # Install tools required for project
 RUN apt-get update
@@ -36,14 +31,9 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 # Clone the repositories
-RUN --mount=type=ssh git clone git@github.com:cscarpitta/pynat.git
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch $EVERYWAN_CONTROL_PLANE_VERSION
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch $EVERYWAN_PROTO_VERSION
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-openssl.git
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-controller-state.git --branch $EVERYWAN_CONTROLLER_STATE_VERSION
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch $EVERYWAN_AUTHENTICATION_LIBRARY_VERSION
-RUN --mount=type=ssh git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch $EVERYWAN_STAMP_LIBRARY_VERSION
-RUN --mount=type=ssh git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine
+RUN git clone https://github.com/cscarpitta/everyedgeos.git --branch ${EVERYEDGEOS_VERSION} ${REPOS_FOLDER}/everyedgeos || { echo 'Failed' ; exit 1; }
+WORKDIR ${REPOS_FOLDER}/everyedgeos
+RUN git submodule update --init || { echo 'Failed' ; exit 1; }
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
@@ -52,14 +42,7 @@ FROM ubuntu
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
 # Copy the repository form the intermediate image
-COPY --from=intermediate /pynat /code/pynat
-COPY --from=intermediate /srv6-sdn-control-plane /code/srv6-sdn-control-plane
-COPY --from=intermediate /srv6-sdn-proto /code/srv6-sdn-proto
-COPY --from=intermediate /srv6-sdn-openssl /code/srv6-sdn-openssl
-COPY --from=intermediate /srv6-sdn-controller-state /code/srv6-sdn-controller-state
-COPY --from=intermediate /srv6-sdn-authentication /code/srv6-sdn-authentication
-COPY --from=intermediate /srv6pm-delay-measurement /code/srv6pm-delay-measurement
-COPY --from=intermediate /srv6-properties-generators /code/srv6-properties-generators
+COPY --from=intermediate /everyedgeos /code/everyedgeos
 
 # Install dependencies
 RUN apt-get update
@@ -68,35 +51,35 @@ RUN pip3 install protobuf==3.19.1
 
 # Setup pynat
 RUN pip3 install six
-WORKDIR /code/pynat
+WORKDIR /code/everyedgeos/src/pynat
 RUN python3 setup.py install
 
 # Setup control plane
-WORKDIR /code/srv6-sdn-control-plane
+WORKDIR /code/everyedgeos/src/srv6-sdn-control-plane
 RUN python3 setup.py install
 
 # Setup and build protos
-WORKDIR /code/srv6-sdn-proto
+WORKDIR /code/everyedgeos/src/srv6-sdn-proto
 RUN python3 setup.py install
 
 # Setup openssl utils
-WORKDIR /code/srv6-sdn-openssl
+WORKDIR /code/everyedgeos/src/srv6-sdn-openssl
 RUN python3 setup.py install
 
 # Setup database utils
-WORKDIR /code/srv6-sdn-controller-state
+WORKDIR /code/everyedgeos/src/srv6-sdn-controller-state
 RUN python3 setup.py install
 
 # Setup authentication utils
-WORKDIR /code/srv6-sdn-authentication
+WORKDIR /code/everyedgeos/src/srv6-sdn-authentication
 RUN python3 setup.py install
 
 # Setup STAMP utils
-WORKDIR /code/srv6pm-delay-measurement
+WORKDIR /code/everyedgeos/src/srv6pm-delay-measurement
 RUN python3 setup.py install
 
 # Setup properties generators
-WORKDIR /code/srv6-properties-generators
+WORKDIR /code/everyedgeos/src/srv6-properties-generators
 RUN python3 setup.py install
 
 # Expose Northbound APIs
@@ -104,7 +87,7 @@ EXPOSE 50061
 EXPOSE 54321
 
 # Run the controller
-WORKDIR /code/srv6-sdn-control-plane
+WORKDIR /code/everyedgeos/src/srv6-sdn-control-plane
 COPY config.ini /configs/config.ini
 #CMD ["python", "-m", "srv6_sdn_control_plane.srv6_controller"]
 CMD ["python3", "-m", "srv6_sdn_control_plane.srv6_controller", "-c", "/configs/config.ini"]
