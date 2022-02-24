@@ -82,6 +82,12 @@ RUN python3 setup.py install
 WORKDIR /code/everyedgeos/src/srv6-properties-generators
 RUN python3 setup.py install
 
+# Workaround to force the installation of a custom version of rollbackcontext
+# patched to work with python3
+RUN apt-get update
+RUN apt-get install -y git
+RUN pip install -e git+https://github.com/cscarpitta/rollbackcontext.git@porting-to-python3#egg=rollbackcontext
+
 # Expose Northbound APIs
 EXPOSE 50061
 EXPOSE 54321
