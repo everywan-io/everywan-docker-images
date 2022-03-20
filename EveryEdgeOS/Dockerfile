@@ -34,6 +34,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 RUN git clone https://github.com/cscarpitta/everyedgeos.git --branch ${EVERYEDGEOS_VERSION} ${REPOS_FOLDER}/everyedgeos || { echo 'Failed' ; exit 1; }
 WORKDIR ${REPOS_FOLDER}/everyedgeos
 RUN git submodule update --init || { echo 'Failed' ; exit 1; }
+RUN git clone https://github.com/cscarpitta/etherws.git ${REPOS_FOLDER}/etherws || { echo 'Failed' ; exit 1; }
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
@@ -43,6 +44,7 @@ MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
 # Copy the repository form the intermediate image
 COPY --from=intermediate /everyedgeos /code/everyedgeos
+COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
 RUN apt-get update
@@ -88,6 +90,10 @@ RUN apt-get update
 RUN apt-get install -y git
 RUN pip install -e git+https://github.com/cscarpitta/rollbackcontext.git@porting-to-python3#egg=rollbackcontext
 
+# Setup etherws
+WORKDIR /code/etherws
+RUN python3 setup.py install
+
 # Expose Northbound APIs
 EXPOSE 50061
 EXPOSE 54321
@@ -96,7 +102,8 @@ EXPOSE 54321
 WORKDIR /code/everyedgeos/src/srv6-sdn-control-plane
 COPY config.ini /configs/config.ini
 #CMD ["python", "-m", "srv6_sdn_control_plane.srv6_controller"]
-CMD ["python3", "-m", "srv6_sdn_control_plane.srv6_controller", "-c", "/configs/config.ini"]
+COPY ./entrypoint.sh /entrypoint.sh
+CMD ["bash", "/entrypoint.sh"]
 #, "--config-file", "gRPC"]
 
 #ENV FLASK_APP=app.py
