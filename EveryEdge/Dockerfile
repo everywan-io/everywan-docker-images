@@ -13,9 +13,6 @@ ENV EVERYEDGE_VERSION=v0.4.1
 RUN apt-get update
 RUN apt-get install -y git
 
-# Folder where to download the repositories
-ENV ${REPOS_FOLDER}=/tmp
-
 # Add credentials on build
 # ARG SSH_PRIVATE_KEY
 # RUN mkdir /root/.ssh/
@@ -34,10 +31,10 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 # Clone the repositories
-RUN git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
-WORKDIR ${REPOS_FOLDER}/everyedge
+RUN git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} /everyedge || { echo 'Failed' ; exit 1; }
+WORKDIR /everyedge
 RUN git submodule update --init || { echo 'Failed' ; exit 1; }
-RUN git clone https://github.com/cscarpitta/etherws.git ${REPOS_FOLDER}/etherws || { echo 'Failed' ; exit 1; }
+RUN git clone https://github.com/cscarpitta/etherws.git /etherws || { echo 'Failed' ; exit 1; }
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
@@ -46,7 +43,7 @@ FROM ubuntu
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
 # Copy the repository form the intermediate image
-COPY --from=intermediate ${REPOS_FOLDER}/everyedge /code/everyedge
+COPY --from=intermediate /everyedge /code/everyedge
 COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
