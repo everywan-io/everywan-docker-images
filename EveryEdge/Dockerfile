@@ -14,7 +14,7 @@ RUN apt-get update
 RUN apt-get install -y git
 
 # Folder where to download the repositories
-${REPOS_FOLDER}=/tmp
+ENV ${REPOS_FOLDER}=/tmp
 
 # Add credentials on build
 # ARG SSH_PRIVATE_KEY
