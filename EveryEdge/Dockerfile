@@ -37,6 +37,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 RUN git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
 WORKDIR ${REPOS_FOLDER}/everyedge
 RUN git submodule update --init || { echo 'Failed' ; exit 1; }
+RUN git clone https://github.com/cscarpitta/etherws.git ${REPOS_FOLDER}/etherws || { echo 'Failed' ; exit 1; }
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
@@ -46,6 +47,7 @@ MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
 # Copy the repository form the intermediate image
 COPY --from=intermediate ${REPOS_FOLDER}/everyedge /code/everyedge
+COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
 RUN apt-get update
@@ -114,7 +116,8 @@ COPY config.ini /configs/config.ini
 COPY device-info.json /configs/device-info.json
 #CMD ["python", "-m", "srv6_sdn_control_plane.srv6_controller"]
 #CMD ["python3", "-m", "srv6_sdn_data_plane.ew_edge_device", "--device-config-file", "/tmp/config-everyedge.json", "--nat-discovery-server-ip", "0.0.0.0", "--nat-discovery-client-ip", "0.0.0.0", "--pymerang-server-ip", "0.0.0.0", "--pymerang-server-port", "50061", "--token-file", "/usr/share/everyedge/token"]
-CMD ["python3", "-m", "srv6_sdn_data_plane.ew_edge_device", "-c", "/etc/everyedge/config.ini"]
+COPY ./entrypoint.sh /entrypoint.sh
+CMD ["bash", "/entrypoint.sh"]
 #"-c", "sample_config.ini"]
 
 #ENV FLASK_APP=app.py
