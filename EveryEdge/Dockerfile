@@ -7,7 +7,7 @@
 FROM ubuntu as intermediate
 
 # Software versions
-ENV EVERYEDGE_VERSION=v0.4.1
+ENV EVERYEDGE_VERSION=v0.4.2
 
 # Install tools required for project
 RUN apt-get update
@@ -125,5 +125,3 @@ CMD ["bash", "/entrypoint.sh"]
 #EXPOSE 5000
 #COPY . .
 #CMD ["flask", "run"]
-
-# TODO: add etherws
