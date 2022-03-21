@@ -7,12 +7,7 @@
 FROM ubuntu as intermediate
 
 # Software versions
-ENV EVERYWAN_PROTO_VERSION=v0.1.0
-ENV EVERYWAN_CONTROL_PLANE_VERSION=v0.1.1
-ENV EVERYWAN_STAMP_LIBRARY_VERSION=v0.1.2
-ENV EVERYWAN_CONTROLLER_STATE_VERSION=v0.1.0
-ENV EVERYWAN_DATA_PLANE_VERSION=v0.1.0
-ENV EVERYWAN_AUTHENTICATION_LIBRARY_VERSION=v0.1.0
+ENV EVERYEDGE_VERSION=v0.4.2
 
 # Install tools required for project
 RUN apt-get update
@@ -36,11 +31,10 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
 # Clone the repositories
-RUN --mount=type=ssh git clone git@github.com:cscarpitta/pynat.git
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-data-plane.git --branch $EVERYWAN_DATA_PLANE_VERSION
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch $EVERYWAN_PROTO_VERSION
-RUN --mount=type=ssh git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch $EVERYWAN_AUTHENTICATION_LIBRARY_VERSION
-RUN --mount=type=ssh git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch $EVERYWAN_STAMP_LIBRARY_VERSION
+RUN git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} /everyedge || { echo 'Failed' ; exit 1; }
+WORKDIR /everyedge
+RUN git submodule update --init || { echo 'Failed' ; exit 1; }
+RUN git clone https://github.com/cscarpitta/etherws.git /etherws || { echo 'Failed' ; exit 1; }
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
@@ -49,11 +43,8 @@ FROM ubuntu
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
 # Copy the repository form the intermediate image
-COPY --from=intermediate /pynat /code/pynat
-COPY --from=intermediate /srv6-sdn-data-plane /code/srv6-sdn-data-plane
-COPY --from=intermediate /srv6-sdn-proto /code/srv6-sdn-proto
-COPY --from=intermediate /srv6-sdn-authentication /code/srv6-sdn-authentication
-COPY --from=intermediate /srv6pm-delay-measurement /code/srv6pm-delay-measurement
+COPY --from=intermediate /everyedge /code/everyedge
+COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
 RUN apt-get update
@@ -81,23 +72,23 @@ RUN pip3 install dist/pyroute2-*
 
 # Setup pynat
 RUN pip3 install six
-WORKDIR /code/pynat
+WORKDIR /code/everyedge/src/pynat
 RUN python3 setup.py install
 
 # Setup data plane
-WORKDIR /code/srv6-sdn-data-plane
+WORKDIR /code/everyedge/src/srv6-sdn-data-plane
 RUN python3 setup.py install
 
 # Setup and build protos
-WORKDIR /code/srv6-sdn-proto
+WORKDIR /code/everyedge/src/srv6-sdn-proto
 RUN python3 setup.py install
 
 # Setup authentication utils
-WORKDIR /code/srv6-sdn-authentication
+WORKDIR /code/everyedge/src/srv6-sdn-authentication
 RUN python3 setup.py install
 
 # Setup STAMP utils
-WORKDIR /code/srv6pm-delay-measurement
+WORKDIR /code/everyedge/src/srv6pm-delay-measurement
 RUN python3 setup.py install
 
 # Expose Northbound APIs
@@ -122,7 +113,8 @@ COPY config.ini /configs/config.ini
 COPY device-info.json /configs/device-info.json
 #CMD ["python", "-m", "srv6_sdn_control_plane.srv6_controller"]
 #CMD ["python3", "-m", "srv6_sdn_data_plane.ew_edge_device", "--device-config-file", "/tmp/config-everyedge.json", "--nat-discovery-server-ip", "0.0.0.0", "--nat-discovery-client-ip", "0.0.0.0", "--pymerang-server-ip", "0.0.0.0", "--pymerang-server-port", "50061", "--token-file", "/usr/share/everyedge/token"]
-CMD ["python3", "-m", "srv6_sdn_data_plane.ew_edge_device", "-c", "/etc/everyedge/config.ini"]
+COPY ./entrypoint.sh /entrypoint.sh
+CMD ["bash", "/entrypoint.sh"]
 #"-c", "sample_config.ini"]
 
 #ENV FLASK_APP=app.py
