@@ -48,7 +48,7 @@ COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq iputils-ping
 RUN pip3 install protobuf==3.19.1
 
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
