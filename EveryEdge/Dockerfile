@@ -7,7 +7,7 @@
 FROM ubuntu as intermediate
 
 # Software versions
-ENV EVERYEDGE_VERSION=v0.4.2
+ENV EVERYEDGE_VERSION=v0.4.4
 
 # Install tools required for project
 RUN apt-get update
@@ -50,25 +50,6 @@ COPY --from=intermediate /etherws /code/etherws
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq iputils-ping
 RUN pip3 install protobuf==3.19.1
-
-# Workaround: The patch which introduces the support for End.DT4 and End.DT46
-# behaviors has not been accepted yet
-# We fix this issue by using our patched version of pyroute2
-RUN apt-get install -y git
-RUN pip3 install twine
-RUN git clone https://github.com/cscarpitta/pyroute2.git --branch srv6_end_dt4 /tmp/pyroute2
-WORKDIR /tmp/pyroute2
-RUN make dist python=python3
-RUN pip3 install dist/pyroute2.core-*
-RUN pip3 install dist/pyroute2.ethtool-*
-RUN pip3 install dist/pyroute2.ipdb-*
-RUN pip3 install dist/pyroute2.ipset-*
-RUN pip3 install dist/pyroute2.minimal-*
-RUN pip3 install dist/pyroute2.ndb-*
-RUN pip3 install dist/pyroute2.nftables-*
-RUN pip3 install dist/pyroute2.nslink-*
-RUN pip3 install dist/pyroute2.protocols-*
-RUN pip3 install dist/pyroute2-*
 
 # Setup pynat
 RUN pip3 install six
