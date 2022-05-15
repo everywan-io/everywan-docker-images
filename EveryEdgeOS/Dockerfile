@@ -38,7 +38,7 @@ RUN git clone https://github.com/cscarpitta/etherws.git ${REPOS_FOLDER}/etherws 
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
-FROM ubuntu
+FROM ubuntu:focal
 
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
@@ -48,7 +48,7 @@ COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y graphviz graphviz-dev python3.8 python3-pip iputils-ping ethtool
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y graphviz graphviz-dev python3 python3-pip iputils-ping ethtool
 RUN pip3 install protobuf==3.19.1
 
 # Setup pynat

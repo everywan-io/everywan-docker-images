@@ -38,7 +38,7 @@ RUN git clone https://github.com/cscarpitta/etherws.git /etherws || { echo 'Fail
 
 # Build the final image
 #FROM python:3.8-slim-bullseye
-FROM ubuntu
+FROM ubuntu:focal
 
 MAINTAINER Carmine Scarpitta "carmine.scarpitta@uniroma2.it"
 
@@ -48,7 +48,7 @@ COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3.8 python3-pip jq iputils-ping
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq iputils-ping
 RUN pip3 install protobuf==3.19.1
 
 # Setup pynat
