@@ -72,6 +72,13 @@ RUN python3 setup.py install
 WORKDIR /code/everyedge/src/srv6pm-delay-measurement
 RUN python3 setup.py install
 
+# Mainstream distribution of Scapy does not support sniffing on Wireguard interface
+# As a workaround, we install a custom version of Scapy that fixes the problem
+RUN pip uninstall Scapy
+RUN git clone https://github.com/cscarpitta/scapy.git --branch bind-no-link-layer-header-to-ipv46 /code/scapy || { echo 'Failed' ; exit 1; }
+WORKDIR /code/scapy
+RUN python3 setup.py install
+
 # Expose Northbound APIs
 EXPOSE 12345
 
