@@ -48,7 +48,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y nodejs npm curl
 RUN npm install -g n
 RUN n 12.20
 RUN n use 12.20
-RUN npm install -g @angular/cli
+RUN npm install -g @angular/cli@12.2.11
 
 # Start EveryGUI
 WORKDIR /code/EveryGUI
