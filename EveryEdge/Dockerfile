@@ -74,7 +74,7 @@ RUN python3 setup.py install
 
 # Mainstream distribution of Scapy does not support sniffing on Wireguard interface
 # As a workaround, we install a custom version of Scapy that fixes the problem
-RUN pip uninstall scapy
+RUN pip uninstall -y scapy
 RUN git clone https://github.com/cscarpitta/scapy.git --branch bind-no-link-layer-header-to-ipv46-2.4.4 /code/scapy || { echo 'Failed' ; exit 1; }
 WORKDIR /code/scapy
 RUN python3 setup.py install
