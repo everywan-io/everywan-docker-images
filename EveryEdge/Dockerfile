@@ -7,7 +7,7 @@
 FROM ubuntu as intermediate
 
 # Software versions
-ENV EVERYEDGE_VERSION=v0.6.0
+ENV EVERYEDGE_VERSION=v0.6.1
 
 # Install tools required for project
 RUN apt-get update
