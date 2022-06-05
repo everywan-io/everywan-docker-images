@@ -48,7 +48,7 @@ COPY --from=intermediate /etherws /code/etherws
 
 # Install dependencies
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq iputils-ping
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip jq iputils-ping git
 RUN pip3 install protobuf==3.19.1
 
 # Setup pynat
@@ -74,7 +74,7 @@ RUN python3 setup.py install
 
 # Mainstream distribution of Scapy does not support sniffing on Wireguard interface
 # As a workaround, we install a custom version of Scapy that fixes the problem
-RUN pip uninstall scapy
+RUN pip uninstall -y scapy
 RUN git clone https://github.com/cscarpitta/scapy.git --branch bind-no-link-layer-header-to-ipv46-2.4.4 /code/scapy || { echo 'Failed' ; exit 1; }
 WORKDIR /code/scapy
 RUN python3 setup.py install
