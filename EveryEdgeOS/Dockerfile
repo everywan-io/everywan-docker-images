@@ -52,6 +52,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y graphviz graphviz-dev py
 RUN pip3 install protobuf==3.19.1
 
 # Workaround: We install a patched version of pyroute2 that solves an issue related to fdb
+RUN apt-get install -y git
 RUN pip3 install twine
 RUN git clone https://github.com/cscarpitta/pyroute2.git --branch fix-fdb-replace-issue /code/pyroute2 || { echo 'Failed' ; exit 1; }
 WORKDIR /code/pyroute2 || { echo 'Failed' ; exit 1; }
