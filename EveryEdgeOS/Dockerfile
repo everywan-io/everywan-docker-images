@@ -52,21 +52,21 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y graphviz graphviz-dev py
 RUN pip3 install protobuf==3.19.1
 
 # Workaround: We install a patched version of pyroute2 that solves an issue related to fdb
-RUN apt-get install -y git build-essential
-RUN pip3 install twine
-RUN git clone https://github.com/cscarpitta/pyroute2.git --branch fix-fdb-replace-issue /code/pyroute2 || { echo 'Failed' ; exit 1; }
-WORKDIR /code/pyroute2 || { echo 'Failed' ; exit 1; }
-RUN make dist python=python3 || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.core-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.ethtool-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.ipdb-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.ipset-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.minimal-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.ndb-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.nftables-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.nslink-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2.protocols-* || { echo 'Failed' ; exit 1; }
-RUN pip3 install dist/pyroute2-* || { echo 'Failed' ; exit 1; }
+# RUN apt-get install -y git build-essential
+# RUN pip3 install twine
+# RUN git clone https://github.com/cscarpitta/pyroute2.git --branch fix-fdb-replace-issue /code/pyroute2 || { echo 'Failed' ; exit 1; }
+# WORKDIR /code/pyroute2 || { echo 'Failed' ; exit 1; }
+# RUN make dist python=python3 || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.core-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.ethtool-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.ipdb-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.ipset-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.minimal-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.ndb-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.nftables-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.nslink-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2.protocols-* || { echo 'Failed' ; exit 1; }
+# RUN pip3 install dist/pyroute2-* || { echo 'Failed' ; exit 1; }
 
 # Setup pynat
 RUN pip3 install six
